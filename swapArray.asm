@@ -8,7 +8,7 @@
 
 
 .data
-# Data Area.  
+# Data Area 5/1
 # Note that while this is typically only for global immutable data, 
 # for SPIM, this also includes mutable data.        
 
@@ -210,7 +210,8 @@ main_failed:
         syscall
         
 main_exit:      
-	# TODO: Write code to properly exit a SPIM simulation
+	li $v0, 10
+        syscall
 
         
 # COPYFROMHERE - DO NOT REMOVE THIS LINE
@@ -230,7 +231,34 @@ doSwap:
         #     }
         # }
 
+        li $t0, 0
+        li $t1, 15
+        la $t2, myArray
+        startloop:
+                bge $t0, $t1, endloop
 
+                        lw $t3, 0($t2)
+
+                        li $t5, 2
+                        div $t3, $t5
+                        mfhi $t5
+                        beq $t5, $zero, replaceZero
+
+                        li $t5, 3
+                        div $t3, $t5
+                        mfhi $t5
+                        beq $t5, $zero, replaceZero
+                        
+                        j endReplaceZero
+                        replaceZero:
+                                sw $zero, 0($t2)
+                        endReplaceZero:
+
+                        addiu $t2, $t2, 4
+
+                addi $t0, $t0, 1
+                j startloop
+        endloop:
 
         # DO NOT REMOVE THIS LAST LINE
         jr $ra
