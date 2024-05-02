@@ -33,17 +33,82 @@
 ##### Assembly (NON-RECURSIVE) code version of gcd(a,b):
 
 .data
-
-	# TODO: Complete these declarations/initializations
-    .asciiz "Enter the first number:\n"
-    .asciiz "Enter the second number:\n"
-    .asciiz "GCD:\n"
-    .asciiz "\n"
+    enterFirst: .asciiz "Enter the first number:\n"
+    enterSecond: .asciiz "Enter the second number:\n"
+    gcd: .asciiz "GCD:\n"
+    endl: .asciiz "\n"
+    test: .asciiz "test\n"
 
 .text
+
 main:
 	
-	# TODO: Write your code here
+    # a is s0
+    # b is s1
+    # n is s2
+    # gcd is s3
+    li $s3, 1
+    # i is s4
+
+getInput:
+    # print enterFirst
+    li $v0, 4
+    la $a0, enterFirst
+    syscall
+    # take in int as a
+    li $v0, 5
+    syscall
+    move $s0, $v0
+    # print enterSecond
+    li $v0, 4
+    la $a0, enterSecond
+    syscall
+    # take in int b
+    li $v0, 5
+    syscall
+    move $s1, $v0
+
+
+setna:
+    bgt $s0, $s1, setnb
+    move $s2, $s0
+    j setndone
+setnb:
+    move $s2, $s1
+setndone:
+
+
+    li $s4, 1
+forloop:
+    bgt $s4, $s2, endforloop
+
+    div $s0, $s4
+    mfhi $t0
+    bne $t0, $zero, endconditionals
+    div $s1, $s4
+    mfhi $t0
+    bne $t0, $zero, endconditionals
+    move $s3, $s4
+
+endconditionals:
+
+    addi $s4, $s4, 1
+    j forloop
+endforloop:
+
+    # print gcd
+    li $v0, 4
+    la $a0, gcd
+    syscall
+    # print i
+    li $v0, 1
+    move $a0, $s3
+    syscall
+    # print newline
+    li $v0, 4
+    la $a0, endl
+    syscall
 
 exit:
-	# TODO: Write code to properly exit a SPIM simulation
+	li $v0, 10
+    syscall
